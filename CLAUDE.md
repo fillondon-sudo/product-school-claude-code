@@ -37,3 +37,10 @@ Supporting signals from the team:
 - Ground recommendations in actual data/quotes from the team — don't invent details
 - Clearly label speculative/proposed content as such (e.g., "proposed — confirm with team")
 - Default to clarifying the problem before proposing solutions
+
+## Tracking docs
+- `project.md` — what Nudge is, squad, current phase, key stakeholders
+- `strategy.md` — hypothesis/strategy for recovering the retention drop
+- `change_log.md` — dated log of significant decisions/milestones
+
+During conversations, proactively prompt when something discussed seems worth saving to one of these files (or a new one we create later) — don't wait to be asked. Ask before writing; don't auto-save without confirmation.
