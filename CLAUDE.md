@@ -18,6 +18,12 @@ Acquisition funnel works: users sign up, connect a bank account, see their spend
 
 30-day retention (active 30 days after connecting first account) dropped from 44% to 37% over the last two quarters.
 
+**Core metric:** 30-day retention (% of users still active 30 days after connecting their first account). Currently 37%, down from 44%.
+
+**Key tension:** Pressure to move toward a solution (personalized weekly summary screen) vs. the need to confirm the team is aligned on the actual problem before committing to that design. Marcus explicitly wants problem alignment first.
+
+**Open decision:** Whether the personalized weekly summary screen is the right Engage v2 direction, and what its success metrics/non-goals should be — to be resolved in Thursday's meeting.
+
 ## Active initiative: Engage v2
 Hypothesis: users go passive because the app stops feeling relevant after the first week. The initial spending breakdown is compelling, but after that Nudge hasn't given users a reason to come back that feels personal, timely, or actionable.
 
