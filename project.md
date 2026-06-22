@@ -9,10 +9,16 @@
 - Surface a personalized weekly summary screen showing: top insight for the week, one actionable nudge based on actual usage patterns, and progress toward savings goal (if one is set).
 
 ## Non-Goals
-- (Not discussed in thread — to be defined)
+*(Not discussed in thread — proposed below for Thursday's discussion, not yet agreed)*
+- Not redesigning the onboarding flow or initial spending breakdown experience (this is about post-week-1 engagement, not acquisition)
+- Not building new data sources/integrations — per Raj, the ranking logic is doable with existing data
+- Not replacing the weekly summary email — the in-app screen extends/continues it, not a substitute
 
 ## Success Metrics
-- (Not discussed in thread — to be defined; likely candidates include 30-day retention rate and email-to-app click-through engagement, but need explicit target metrics before Thursday's meeting)
+*(Not discussed in thread — proposed below for Thursday's discussion, not yet agreed)*
+- 30-day retention rate (recover toward 44% baseline)
+- Increase in week-1 savings goal creation rate (given its correlation with reduced churn)
+- Email-to-app click-through engagement / continuity (does clicking the weekly email lead to meaningful in-app action, not a drop-off)
 
 ## Open Questions for Thursday
 - Are we aligned that the core problem is lack of post-onboarding relevance/pull-back mechanism, vs. onboarding itself not surfacing savings goals aggressively enough?
