@@ -6,3 +6,4 @@
 - Surfaced supporting signals: savings-goal correlation with churn, static home feed, email/in-app discontinuity.
 - Drafted a proposed direction (personalized weekly summary screen) — not yet agreed, pending Thursday's problem-alignment meeting.
 - Set up project.md (overview), strategy.md (hypothesis), and change_log.md (this file) to track Engage v2 work.
+- Built a reusable skill (`skills/weekly-status.md`) for turning raw notes into a formatted leadership status update.
