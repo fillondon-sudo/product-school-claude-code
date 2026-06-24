@@ -10,3 +10,4 @@
 - Synthesized 3 user interviews (`research/interview-synthesis.md`) — top theme: repetitive/static experience and a ~3-month time-to-value risk.
 - Analyzed NPS feedback (`research/nps-analysis.md`) — independently confirmed the same top theme (static/repetitive experience).
 - Researched 3 competitors — Monarch Money, Cleo, Rocket Money (`research/competitive-matrix.md`) — identified two white-space gaps: proactive ranked weekly guidance, and email/notification-to-in-app continuity. Neither gap is owned well by competitors, both align with internal research findings.
+- Synthesized all research into a 1-page decision brief for Marcus (`docs/decision-brief.md`) recommending the personalized weekly summary screen as the Engage v2 direction.
