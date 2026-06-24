@@ -43,4 +43,6 @@ Supporting signals from the team:
 - `strategy.md` — hypothesis/strategy for recovering the retention drop
 - `change_log.md` — dated log of significant decisions/milestones
 
-During conversations, proactively prompt when something discussed seems worth saving to one of these files (or a new one we create later) — don't wait to be asked. Ask before writing; don't auto-save without confirmation.
+During conversations, proactively prompt when something discussed seems worth saving to one of these files (or a new one we create later) — don't wait to be asked. Ask before writing to `project.md` or `strategy.md`; don't auto-save those without confirmation.
+
+`change_log.md` is the exception: log significant milestones (new docs created, research completed, decisions made) automatically as they happen, without asking first.
