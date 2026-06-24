@@ -264,17 +264,6 @@ function scoreNudges(insight) {
       },
     },
     {
-      id: "no_goal_setup",
-      text: "You haven't set a savings goal yet. Users who set one in week 1 are far less likely to drop off. Want to set one now?",
-      action: "Set a savings goal",
-      signals: {
-        magnitude: state.goalActive ? 0 : 9,
-        relevance: state.goalActive ? 0 : 10,
-        actionability: 10,
-        recency: 5,
-      },
-    },
-    {
       id: "subscription_audit",
       text: `Subscriptions hit $${subsThisWeek.toFixed(0)} this week, including a $185 Equinox charge. Want to review recurring charges?`,
       action: "Review subscriptions",
