@@ -17,3 +17,4 @@
 - Ran usability session 1 on the prototype (`docs/iteration-log.md`) — top friction: duplicate/ambiguous "Set a savings goal" CTA when no goal is set. Fixed by removing the duplicate nudge candidate; goal card is now the single CTA for setting a goal.
 - Structured and ranked all session 1 feedback into a single reviewable list (`docs/iteration1-feedback.md`) for deciding scope of the next prototype iteration.
 - Wrote a learning synthesis (known/assumed/unknown) and formal hypothesis statement (`docs/hypothesis.md`) for the personalized weekly summary screen, tying it to the 30-day retention metric.
+- Prepared the triad working session agenda and post-session alignment doc template (`docs/triad-session.md`) ahead of reviewing the prototype with Raj and Lena.
