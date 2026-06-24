@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Nudge — Weekly Money Summary Prototype</title>
+<style>
+  :root {
+    --bg: #0f1115;
+    --card: #1a1d24;
+    --accent: #5ee0b0;
+    --accent-2: #7c9bff;
+    --warn: #ffb15e;
+    --text: #f2f3f5;
+    --muted: #9aa0ab;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    display: flex;
+    justify-content: center;
+    padding: 32px 16px;
+  }
+  .phone {
+    width: 390px;
+    max-width: 100%;
+    background: var(--card);
+    border-radius: 28px;
+    padding: 24px 20px 28px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+  }
+  h1 {
+    font-size: 15px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+    margin: 0 0 4px;
+  }
+  .greeting {
+    font-size: 22px;
+    font-weight: 600;
+    margin: 0 0 20px;
+  }
+  .card {
+    background: #20242d;
+    border-radius: 18px;
+    padding: 18px;
+    margin-bottom: 14px;
+    border: 1px solid #2a2f3a;
+  }
+  .card-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--muted);
+    margin-bottom: 8px;
+  }
+  .insight-amount {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--accent-2);
+  }
+  .insight-text { margin-top: 6px; font-size: 14px; color: var(--text); line-height: 1.4; }
+  .nudge-card { border-color: #3a3320; background: #232017; }
+  .nudge-text { font-size: 14px; line-height: 1.45; margin-bottom: 12px; }
+  .nudge-btn {
+    background: var(--warn);
+    color: #1a1207;
+    border: none;
+    padding: 10px 16px;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 13px;
+    cursor: pointer;
+    width: 100%;
+  }
+  .nudge-btn:active { opacity: 0.8; }
+  .nudge-acted { color: var(--accent); font-size: 13px; font-weight: 600; }
+  .goal-card { border-color: #1f3a2c; background: #16221b; }
+  .goal-bar-bg {
+    background: #2a3530;
+    border-radius: 8px;
+    height: 10px;
+    overflow: hidden;
+    margin: 10px 0 6px;
+  }
+  .goal-bar-fill {
+    background: var(--accent);
+    height: 100%;
+    border-radius: 8px;
+    transition: width 0.4s ease;
+  }
+  .goal-meta { font-size: 12px; color: var(--muted); display: flex; justify-content: space-between; }
+  .no-goal-prompt { font-size: 14px; line-height: 1.4; margin-bottom: 10px; }
+  .goal-btn {
+    background: var(--accent);
+    color: #07261a;
+    border: none;
+    padding: 10px 16px;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 13px;
+    cursor: pointer;
+    width: 100%;
+  }
+  .toggle-row {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 18px;
+  }
+  .toggle-btn {
+    flex: 1;
+    background: #20242d;
+    border: 1px solid #2a2f3a;
+    color: var(--muted);
+    padding: 8px 6px;
+    border-radius: 10px;
+    font-size: 11px;
+    cursor: pointer;
+  }
+  .toggle-btn.active {
+    color: var(--text);
+    border-color: var(--accent-2);
+    background: #232a3a;
+  }
+  details {
+    margin-top: 18px;
+    font-size: 12px;
+    color: var(--muted);
+  }
+  summary { cursor: pointer; }
+  .score-row { display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 1px dashed #2a2f3a; }
+  .score-row:last-child { border-bottom: none; }
+  .score-winner { color: var(--accent); font-weight: 600; }
+</style>
+</head>
+<body>
+<div class="phone">
+  <h1>This Week</h1>
+  <div class="greeting">Hey Jordan 👋</div>
+
+  <div class="toggle-row">
+    <button class="toggle-btn active" id="goalToggleBtn" onclick="toggleGoalState()">Goal: Active</button>
+  </div>
+  <div style="font-size:11px;color:var(--muted);margin:-10px 0 18px;">Toggle to demo the no-goal state</div>
+
+  <div class="card" id="insightCard">
+    <div class="card-label">Top Insight</div>
+    <div class="insight-amount" id="insightAmount"></div>
+    <div class="insight-text" id="insightText"></div>
+  </div>
+
+  <div class="card nudge-card" id="nudgeCard">
+    <div class="card-label">Suggested Action</div>
+    <div class="nudge-text" id="nudgeText"></div>
+    <button class="nudge-btn" id="nudgeBtn" onclick="actOnNudge()"></button>
+  </div>
+
+  <div class="card goal-card" id="goalCard"></div>
+
+  <details>
+    <summary>Why this nudge? (scoring detail)</summary>
+    <div id="scoreDetail"></div>
+  </details>
+</div>
+
+<script>
+/* ---------- Fabricated transaction data: ~2 weeks, Chase-style ---------- */
+const transactions = [
+  // Week 2 (most recent / "this week")
+  { date: "2026-06-17", merchant: "Sweetgreen",        category: "Dining",        amount: -14.25, week: 2 },
+  { date: "2026-06-17", merchant: "Uber",               category: "Transport",     amount: -22.40, week: 2 },
+  { date: "2026-06-18", merchant: "Trader Joe's",        category: "Groceries",     amount: -61.10, week: 2 },
+  { date: "2026-06-18", merchant: "Netflix",             category: "Subscriptions", amount: -15.49, week: 2 },
+  { date: "2026-06-19", merchant: "Chipotle",            category: "Dining",        amount: -12.80, week: 2 },
+  { date: "2026-06-19", merchant: "Spotify",             category: "Subscriptions", amount: -10.99, week: 2 },
+  { date: "2026-06-20", merchant: "Equinox",             category: "Subscriptions", amount: -185.00, week: 2 },
+  { date: "2026-06-20", merchant: "Doordash",            category: "Dining",        amount: -34.60, week: 2 },
+  { date: "2026-06-21", merchant: "Shell",               category: "Transport",     amount: -42.00, week: 2 },
+  { date: "2026-06-21", merchant: "Doordash",            category: "Dining",        amount: -28.10, week: 2 },
+  { date: "2026-06-22", merchant: "Rent — Greystar",     category: "Housing",       amount: -1850.00, week: 2 },
+  { date: "2026-06-22", merchant: "Doordash",            category: "Dining",        amount: -41.30, week: 2 },
+  { date: "2026-06-23", merchant: "Whole Foods",         category: "Groceries",     amount: -55.20, week: 2 },
+  // Week 1 (baseline / "last week")
+  { date: "2026-06-10", merchant: "Sweetgreen",         category: "Dining",        amount: -13.10, week: 1 },
+  { date: "2026-06-10", merchant: "Trader Joe's",        category: "Groceries",     amount: -58.40, week: 1 },
+  { date: "2026-06-11", merchant: "Netflix",             category: "Subscriptions", amount: -15.49, week: 1 },
+  { date: "2026-06-12", merchant: "Chipotle",            category: "Dining",        amount: -11.50, week: 1 },
+  { date: "2026-06-13", merchant: "Spotify",             category: "Subscriptions", amount: -10.99, week: 1 },
+  { date: "2026-06-13", merchant: "Uber",                category: "Transport",     amount: -18.20, week: 1 },
+  { date: "2026-06-14", merchant: "Shell",               category: "Transport",     amount: -40.00, week: 1 },
+  { date: "2026-06-15", merchant: "Rent — Greystar",     category: "Housing",       amount: -1850.00, week: 1 },
+  { date: "2026-06-15", merchant: "Whole Foods",         category: "Groceries",     amount: -49.90, week: 1 },
+];
+
+/* ---------- State ---------- */
+let state = {
+  goalActive: true,
+  week: 2, // 2 = this week, 1 = last week (used for comparison baseline regardless)
+  nudgeActed: false,
+};
+
+const goalFixture = {
+  name: "Emergency Fund",
+  target: 500,
+  saved: 210,
+};
+
+/* ---------- Insight detection ---------- */
+function sumByCategory(week) {
+  const sums = {};
+  transactions.filter(t => t.week === week).forEach(t => {
+    sums[t.category] = (sums[t.category] || 0) + Math.abs(t.amount);
+  });
+  return sums;
+}
+
+function computeTopInsight() {
+  const thisWeek = sumByCategory(2);
+  const lastWeek = sumByCategory(1);
+  let topCategory = null;
+  let topDelta = -Infinity;
+  let topPctChange = 0;
+
+  Object.keys(thisWeek).forEach(cat => {
+    if (cat === "Housing") return; // fixed cost, not insight-worthy
+    const curr = thisWeek[cat];
+    const prev = lastWeek[cat] || 0;
+    const delta = curr - prev;
+    if (delta > topDelta) {
+      topDelta = delta;
+      topCategory = cat;
+      topPctChange = prev > 0 ? (delta / prev) * 100 : 100;
+    }
+  });
+
+  return {
+    category: topCategory,
+    thisWeekAmount: thisWeek[topCategory],
+    lastWeekAmount: lastWeek[topCategory] || 0,
+    delta: topDelta,
+    pctChange: topPctChange,
+  };
+}
+
+/* ---------- Nudge candidates, scored against multiple signals ---------- */
+function scoreNudges(insight) {
+  const diningThisWeek = sumByCategory(2)["Dining"] || 0;
+  const diningLastWeek = sumByCategory(1)["Dining"] || 0;
+  const subsThisWeek = sumByCategory(2)["Subscriptions"] || 0;
+
+  const candidates = [
+    {
+      id: "dining_spike",
+      text: `Dining is up ${Math.round(((diningThisWeek - diningLastWeek) / Math.max(diningLastWeek,1)) * 100)}% this week ($${diningThisWeek.toFixed(0)} vs $${diningLastWeek.toFixed(0)}), mostly Doordash. Want to set a $${Math.round(diningLastWeek)} weekly dining cap?`,
+      action: "Set $" + Math.round(diningLastWeek) + " dining cap",
+      signals: {
+        magnitude: Math.min((diningThisWeek - diningLastWeek) / 20, 10),
+        relevance: insight.category === "Dining" ? 10 : 2,
+        actionability: 9,
+        recency: 8,
+      },
+    },
+    {
+      id: "no_goal_setup",
+      text: "You haven't set a savings goal yet. Users who set one in week 1 are far less likely to drop off. Want to set one now?",
+      action: "Set a savings goal",
+      signals: {
+        magnitude: state.goalActive ? 0 : 9,
+        relevance: state.goalActive ? 0 : 10,
+        actionability: 10,
+        recency: 5,
+      },
+    },
+    {
+      id: "subscription_audit",
+      text: `Subscriptions hit $${subsThisWeek.toFixed(0)} this week, including a $185 Equinox charge. Want to review recurring charges?`,
+      action: "Review subscriptions",
+      signals: {
+        magnitude: Math.min(subsThisWeek / 25, 10),
+        relevance: 5,
+        actionability: 7,
+        recency: 4,
+      },
+    },
+    {
+      id: "goal_boost",
+      text: `You're $${(goalFixture.target - goalFixture.saved).toFixed(0)} away from your ${goalFixture.name} goal. Want to round up this week's purchases to top it up?`,
+      action: "Round up toward goal",
+      signals: {
+        magnitude: 4,
+        relevance: state.goalActive ? 7 : 0,
+        actionability: 6,
+        recency: 3,
+      },
+    },
+  ];
+
+  const weights = { magnitude: 0.35, relevance: 0.35, actionability: 0.2, recency: 0.1 };
+
+  candidates.forEach(c => {
+    c.score = Object.keys(weights).reduce((sum, k) => sum + c.signals[k] * weights[k], 0);
+  });
+
+  candidates.sort((a, b) => b.score - a.score);
+  return candidates;
+}
+
+/* ---------- Render ---------- */
+function render() {
+  const insight = computeTopInsight();
+  document.getElementById("insightAmount").textContent =
+    "$" + insight.thisWeekAmount.toFixed(0) + " on " + insight.category;
+  document.getElementById("insightText").textContent =
+    insight.lastWeekAmount > 0
+      ? `That's ${insight.pctChange >= 0 ? "up" : "down"} ${Math.abs(Math.round(insight.pctChange))}% from last week ($${insight.lastWeekAmount.toFixed(0)}).`
+      : `New category for you this week.`;
+
+  const ranked = scoreNudges(insight);
+  const top = ranked[0];
+  document.getElementById("nudgeText").textContent = top.text;
+  const nudgeBtn = document.getElementById("nudgeBtn");
+  nudgeBtn.textContent = top.action;
+  nudgeBtn.style.display = state.nudgeActed ? "none" : "block";
+  if (state.nudgeActed) {
+    document.getElementById("nudgeCard").innerHTML =
+      '<div class="card-label">Suggested Action</div><div class="nudge-acted">✓ Action taken — nice work.</div>';
+  }
+
+  const scoreDetail = document.getElementById("scoreDetail");
+  scoreDetail.innerHTML = ranked.map((c, i) =>
+    `<div class="score-row"><span class="${i === 0 ? 'score-winner' : ''}">${c.id}</span><span class="${i === 0 ? 'score-winner' : ''}">${c.score.toFixed(2)}</span></div>`
+  ).join("");
+
+  const goalCard = document.getElementById("goalCard");
+  if (state.goalActive) {
+    const pct = Math.min(100, Math.round((goalFixture.saved / goalFixture.target) * 100));
+    goalCard.innerHTML = `
+      <div class="card-label">Savings Goal</div>
+      <div style="font-size:14px;font-weight:600;">${goalFixture.name}</div>
+      <div class="goal-bar-bg"><div class="goal-bar-fill" style="width:${pct}%"></div></div>
+      <div class="goal-meta"><span>$${goalFixture.saved} saved</span><span>$${goalFixture.target} goal</span></div>
+    `;
+  } else {
+    goalCard.innerHTML = `
+      <div class="card-label">Savings Goal</div>
+      <div class="no-goal-prompt">You haven't set a savings goal yet. Users who set one in week 1 churn at about half the rate of those who don't.</div>
+      <button class="goal-btn" onclick="setGoal()">Set a savings goal</button>
+    `;
+  }
+}
+
+function actOnNudge() {
+  state.nudgeActed = true;
+  render();
+}
+
+function setGoal() {
+  state.goalActive = true;
+  document.getElementById("goalToggleBtn").textContent = "Goal: Active";
+  document.getElementById("goalToggleBtn").classList.add("active");
+  render();
+}
+
+function toggleGoalState() {
+  state.goalActive = !state.goalActive;
+  const btn = document.getElementById("goalToggleBtn");
+  btn.textContent = "Goal: " + (state.goalActive ? "Active" : "None");
+  btn.classList.toggle("active", state.goalActive);
+  state.nudgeActed = false;
+  render();
+}
+
+render();
+</script>
+</body>
+</html>
