@@ -7,6 +7,8 @@
 - Drafted a proposed direction (personalized weekly summary screen) — not yet agreed, pending Thursday's problem-alignment meeting.
 - Set up project.md (overview), strategy.md (hypothesis), and change_log.md (this file) to track Engage v2 work.
 - Built a reusable skill (`skills/weekly-status.md`) for turning raw notes into a formatted leadership status update.
+
+## Day 2 — 2026-06-26 — Research synthesis and prototype
 - Synthesized 3 user interviews (`research/interview-synthesis.md`) — top theme: repetitive/static experience and a ~3-month time-to-value risk.
 - Analyzed NPS feedback (`research/nps-analysis.md`) — independently confirmed the same top theme (static/repetitive experience).
 - Researched 3 competitors — Monarch Money, Cleo, Rocket Money (`research/competitive-matrix.md`) — identified two white-space gaps: proactive ranked weekly guidance, and email/notification-to-in-app continuity. Neither gap is owned well by competitors, both align with internal research findings.
