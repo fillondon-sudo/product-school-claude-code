@@ -18,3 +18,4 @@
 - Structured and ranked all session 1 feedback into a single reviewable list (`docs/iteration1-feedback.md`) for deciding scope of the next prototype iteration.
 - Wrote a learning synthesis (known/assumed/unknown) and formal hypothesis statement (`docs/hypothesis.md`) for the personalized weekly summary screen, tying it to the 30-day retention metric.
 - Prepared the triad working session agenda and post-session alignment doc template (`docs/triad-session.md`) ahead of reviewing the prototype with Raj and Lena.
+- Reviewed the maybe-finance/maybe open-source codebase as a PM-level reference (`docs/codebase-summary.md`) — confirmed it has no notification/insight-ranking system, only email and on-demand AI chat, informing scope considerations for a notification ranking ticket.
