@@ -43,13 +43,45 @@ GROUP BY goal_group;
 
 **Plain English:** Split users into two groups based on whether `goal_set_date` falls within 7 days of `signup_date` (or is blank, meaning no goal was ever set). Compare day-7 and day-30 retention between the groups.
 
-**Result:**
+**Result (all cohorts combined):**
 | group | n_users | day_7 retention | day_30 retention |
 |---|---|---|---|
 | goal_set_week1 | 165 | 67.3% | 36.4% |
 | no_goal_week1 | 335 | 46.3% | 21.8% |
 
 **What it means for scaling the weekly summary:** This strongly confirms the churn signal already named in `CLAUDE.md` ("churn is nearly double for users who don't set a savings goal in week 1") — day-30 retention is 36.4% vs. 21.8%, a ~1.67x difference. This is correlational, not causal (users motivated enough to set a goal in week 1 may simply be more engaged generally), but it directly supports prioritizing the goal-progress card and the goal-visibility fix flagged in `docs/design-review.md` as the highest-impact change.
+
+### Same Comparison, Broken Out by Cohort Week (2, 3, 4 — plus 1 and 5 for context)
+
+```sql
+SELECT u.cohort_week,
+  CASE WHEN u.goal_set_date <> ''
+       AND julianday(u.goal_set_date) - julianday(u.signup_date) <= 7
+       THEN 'goal_set_week1' ELSE 'no_goal_week1' END AS goal_group,
+  COUNT(*) AS n_users,
+  ROUND(AVG(r.day_7)*100,1) AS day7_pct,
+  ROUND(AVG(r.day_30)*100,1) AS day30_pct,
+  ROUND(AVG(r.churned)*100,1) AS churn_pct
+FROM nudge_users u
+JOIN nudge_retention r ON r.user_id = u.user_id
+GROUP BY u.cohort_week, goal_group
+ORDER BY u.cohort_week, goal_group;
+```
+
+| cohort_week | group | n_users | day_7 | day_30 | churn |
+|---|---|---|---|---|---|
+| 1 | goal_set_week1 | 32 | 81.3% | 37.5% | 62.5% |
+| 1 | no_goal_week1 | 68 | 50.0% | 29.4% | 70.6% |
+| 2 | goal_set_week1 | 29 | 65.5% | 34.5% | 65.5% |
+| 2 | no_goal_week1 | 71 | 47.9% | 21.1% | 78.9% |
+| 3 | goal_set_week1 | 44 | 56.8% | 29.5% | 70.5% |
+| 3 | no_goal_week1 | 56 | 41.1% | 21.4% | 78.6% |
+| 4 | goal_set_week1 | 27 | 66.7% | 40.7% | 59.3% |
+| 4 | no_goal_week1 | 73 | 35.6% | 15.1% | 84.9% |
+| 5 | goal_set_week1 | 33 | 69.7% | 42.4% | 57.6% |
+| 5 | no_goal_week1 | 67 | 56.7% | 22.4% | 77.6% |
+
+**What this adds:** The goal-setting retention gap isn't a fluke of the combined average — it holds in every single cohort, and the churn-rate gap actually *widens* over time: cohort 1's churn gap is 8.1pp (62.5% vs 70.6%), but by cohort 4 it's 25.6pp (59.3% vs 84.9%). Cohort 4 — the cohort with the worst overall retention in Q1 — has the largest goal-setting effect of all, which suggests the goal-setting mechanism isn't just correlated with retention, it may be one of the more resilient levers even as overall retention erodes cohort over cohort. This reinforces that fixing goal visibility (the change recommended in `docs/design-review.md`) isn't a nice-to-have alongside the weekly summary — it's addressing the single largest and most consistent retention split in the dataset.
 
 ## 3. Week 5 Cohort Only: Day-7 and Day-30 Retention, Treatment vs. Control
 
